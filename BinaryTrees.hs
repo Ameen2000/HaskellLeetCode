@@ -1,6 +1,30 @@
 data Tree a =
     Leaf | Node a (Tree a) (Tree a) deriving (Show, Read, Eq)
 
+node :: a -> Tree a
+node x = Node x Leaf Leaf
+
+treeInsert :: (Ord a) => a -> Tree a -> Tree a
+treeInsert x Leaf = node x
+treeInsert x (Node a left right)
+  | x == a = Node x left right
+  | x < a = Node a (treeInsert x left) right
+  | x > a = Node a left (treeInsert x right)
+
+treeElem :: (Ord a) => a -> Tree a -> Bool
+treeElem x Leaf = False
+treeElem x (Node a left right)
+  | x == a = True
+  | x < a = treeElem x left
+  | x > a = treeElem x right
+
+-- Tree generator from a list of nums
+treeright :: (Ord a) => [a] -> Tree a
+treeright [] = Leaf
+treeright lst = foldr treeInsert Leaf lst
+
+treeleft lst = treeright (reverse lst)
+
 -- Find the depth of a Binary Tree
 depth :: Tree a -> Int
 depth Leaf = 0
@@ -29,3 +53,13 @@ invert :: Tree a -> Tree a
 invert Leaf = Leaf
 invert (Node root Leaf Leaf) = Node root Leaf Leaf 
 invert (Node root left right) = Node root (invert right) (invert left)
+
+-- Balanced Binary Tree
+isBalanced :: Tree a -> Bool
+isBalanced Leaf = True
+isBalanced (Node root Leaf Leaf) = True
+isBalanced (Node root left right) = 
+    case abs (depth left - depth right) of
+      0 -> True
+      1 -> True
+      _ -> False
