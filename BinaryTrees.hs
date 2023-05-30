@@ -63,3 +63,19 @@ isBalanced (Node root left right) =
       0 -> True
       1 -> True
       _ -> False
+
+-- Same Binary Tree
+isSameTree :: (Eq a) => Tree a -> Tree a -> Bool
+isSameTree Leaf Leaf = True
+isSameTree (Node root1 left1 right1) (Node root2 left2 right2) =
+    (root1 == root2) && isSameTree left1 left2 && isSameTree right1 right2
+isSameTree Leaf _ = False
+isSameTree _ Leaf = False
+
+-- Subtree of another Tree
+isSubTree :: (Eq a) => Tree a -> Tree a -> Bool
+isSubTree _ Leaf = True
+isSubTree Leaf _ = False
+isSubTree (Node root left right) (Node subroot l r) =
+    isSameTree (Node root left right) (Node subroot l r) || 
+    isSubTree left (Node subroot l r) || isSubTree right (Node subroot l r)
