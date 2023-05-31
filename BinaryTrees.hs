@@ -11,6 +11,10 @@ treeInsert x (Node a left right)
   | x < a = Node a (treeInsert x left) right
   | x > a = Node a left (treeInsert x right)
 
+nodeVal :: Tree a -> Maybe a
+nodeVal Leaf = Nothing
+nodeVal (Node a _ _) = Just a
+
 treeElem :: (Ord a) => a -> Tree a -> Bool
 treeElem x Leaf = False
 treeElem x (Node a left right)
@@ -79,3 +83,13 @@ isSubTree Leaf _ = False
 isSubTree (Node root left right) (Node subroot l r) =
     isSameTree (Node root left right) (Node subroot l r) || 
     isSubTree left (Node subroot l r) || isSubTree right (Node subroot l r)
+
+-- Lowest Common Ancestor for Binary Search Tree
+lcaBST :: (Ord a) => Tree a -> Tree a -> Tree a -> Tree a
+lcaBST Leaf _ _ = Leaf
+lcaBST (Node root left right) node1 node2 
+    |  Just root > nodeVal node1 && Just root > nodeVal node2
+    = lcaBST left node1 node2
+    | Just root < nodeVal node1 && Just root < nodeVal node2
+    = lcaBST right node1 node2
+    | otherwise = Node root left right
