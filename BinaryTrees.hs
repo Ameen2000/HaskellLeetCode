@@ -93,3 +93,18 @@ lcaBST (Node root left right) node1 node2
     | Just root < nodeVal node1 && Just root < nodeVal node2
     = lcaBST right node1 node2
     | otherwise = Node root left right
+
+-- Good Nodes of a Binary Tree
+goodNodes :: (Ord a) => Tree a -> Int
+goodNodes tr =
+    let aux tr maxVal =
+            case tr of
+              Leaf -> 0
+              Node val left right ->
+                  if val >= maxVal
+                     then 1 + aux left val + aux right val
+                     else aux left val + aux right val
+            in
+            case tr of
+              Leaf -> 0
+              Node val _ _ -> aux tr val
