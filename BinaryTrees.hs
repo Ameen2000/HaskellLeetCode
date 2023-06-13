@@ -108,3 +108,13 @@ goodNodes tr =
             case tr of
               Leaf -> 0
               Node val _ _ -> aux tr val
+
+-- Kth smallest element of BST
+kthSmallest :: (Num a) => Tree a -> Int -> a
+kthSmallest bst k =
+    traverse bst [] !! (k-1)
+        where traverse bst stack =
+                case bst of
+                  Leaf -> stack
+                  Node root left right ->
+                      traverse left (root : traverse right stack)
